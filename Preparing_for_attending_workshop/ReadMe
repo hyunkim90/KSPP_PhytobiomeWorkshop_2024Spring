@@ -2,8 +2,14 @@ Before attending the workshop, please have the following ready.
 
 1. Bring a laptop for the hands-on analyses.
 
-2. Install required R packages in advance.
-  2-1. for the Session 2
+2. Install required software
+   2-1.
+
+   2-2. R and R studio
+   
+
+3. Install required R packages in advance.
+  3-1. for the Session 2
        if (!requireNamespace("BiocManager", quietly = TRUE)){install.packages("BiocManager")}
        BiocManager::install("microbiome")
 
@@ -12,6 +18,6 @@ Before attending the workshop, please have the following ready.
 
        install.packages(c("phyloseq","ggplot2","vegan"))
 
-  2-2. for the Session 3
+  3-2. for the Session 3
        install.packages(c("iCAMP","reshape2","dplyr","ape"))
 
