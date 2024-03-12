@@ -5,7 +5,7 @@ Data for the on-site demonstration are included.
 
 Directory Description 
 
-1. RawSequenceData: compressed fastq sequence data for the demonstration
+1. RawSequenceData: compressed fastq sequence data for the on-site hands-on analyses
 
 2. SampleMetadata: tab-separate sample metadata (tsv format) for the sequence processing and R analyses
 
