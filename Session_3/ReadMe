@@ -2,4 +2,5 @@ Script and output data addressed in the last session
 
 Description of files and folders
 1. Script.R: The R script for the hands-on analyses
-2. Output: The output files of the analyses
+2. Appendix_script_Testing phylogenetic signals for the iCAMP analysis.R: The auxiliary R script for testing phylogenetic signals
+3. Output: The output files of the analyses
