@@ -1,4 +1,4 @@
-## 1. prepare prerequisites for the analysis ####
+## 1. prepare data and tools for the analysis ####
 ### 1-0. installing the required R packages ####
 install.packages("iCAMP")
 install.packages("reshape2")
