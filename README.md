@@ -15,4 +15,4 @@ Directory Description
 
 5. Session_2: Script and output data addressed in the second session
 
-6. Session_3:: Script and output data addressed in the last session
+6. Session_3: Script and output data addressed in the last session
