@@ -306,3 +306,87 @@ ggplot(bac.phylo.bin.melt.mean, aes(x=Bin, y = MeanRelImportance, fill = Index))
   scale_y_continuous(breaks=seq(0,1,0.2))+
   theme(panel.grid.major = element_blank()) +
   theme(panel.grid.minor = element_blank(), panel.background=element_blank(),panel.border=element_blank(), plot.background=element_blank())
+
+### 6-3. Ecological drivers of treatment group ####
+#### 6-3-1. parse data from the result ####
+bac.phylo.treat<-read.csv("Test.ProcessImportance_EachGroup.csv")
+head(bac.phylo.treat)
+#### 6-3-2. format the data to fit to ggplot2 ####
+bac.phylo.treat.melt <- reshape2::melt(bac.phylo.treat)
+head(bac.phylo.treat.melt)
+### arrange values
+names(bac.phylo.treat.melt)[4] <- "Index"
+names(bac.phylo.treat.melt)[5] <- "RelImportance"
+bac.phylo.treat.melt$Index <- factor(bac.phylo.treat.melt$Index, levels = rev(c("HoS","HeS","DL","HD","DR")))
+group.list<-unique(bac.phylo.treat.melt$Group)
+bac.phylo.treat.melt$Group <- factor(bac.phylo.treat.melt$Group, levels = group.list)
+
+#### 6-3-3. plotting ####
+ggplot(bac.phylo.treat.melt, aes(x=Group, y = RelImportance, fill = Index)) + 
+  geom_bar(stat="identity", width = 0.8, position = 'stack') +
+  #scale_fill_discrete() +
+  scale_fill_manual(values = c("HoS"= "#3c93c2","HeS" = "#9ec9e2",
+                               "DL" = "#fcde9c", "HD" = "#feb24c",
+                               "DR"="#fc4e2a")) +
+  
+  xlab('')+ theme(aspect.ratio = 1) + 
+  ylab("Relative importance \n") +
+  #ggtitle("Phylum Community Composition by Sample \n") +
+  ## adjust positions
+  guides(fill = guide_legend(nrow = 5,reverse = F))+
+  theme(legend.position="right") +
+  theme(plot.title = element_text(size = 20,hjust = 0.5, face='bold')) + 
+  theme(axis.title.x = element_text(size = 15,hjust = 0.5, face='bold')) + 
+  theme(axis.title.y = element_text(size = 13,hjust = 0.5, face='bold')) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.4,size=12, face='bold',color='black'))+
+  theme(axis.text.y = element_text(size=15, face='bold',color='black'))+
+  scale_y_continuous(breaks=seq(0,1,0.2))+
+  theme(panel.grid.major = element_blank()) +
+  theme(panel.grid.minor = element_blank(), panel.background=element_blank(),panel.border=element_blank(), plot.background=element_blank())
+
+### 6-4. Ecological drivers of treatment group and each bin ####
+#### 6-4-1. parse data from the result ####
+bac.phylo.bin<-read.csv("Test.ProcessImportance_EachBin_EachGroup.csv")
+head(bac.phylo.bin)
+bac.phylo.bin <- bac.phylo.bin[-c(1,2)] # remove the first and second column
+bac.phylo.bin <- subset(bac.phylo.bin, !(rownames(bac.phylo.bin) %in% rownames(bac.phylo.bin[grep("DominantProcess",bac.phylo.bin$Index),]))) # remove rows containing the value DominantProcess in the column Index
+
+### change the class to numeric if the class of relative importance values is character
+i<-c(3:ncol(bac.phylo.bin))
+bac.phylo.bin[, i] <- apply(bac.phylo.bin[ , i], 2,function(x) as.numeric(as.character(x)))
+head(bac.phylo.bin)
+#### 6-4-2. format the data to fit to ggplot2 ####
+bac.phylo.bin.melt <- reshape2::melt(bac.phylo.bin)
+subset(bac.phylo.bin.melt, value == "NaN") ### check if there is "NaN" among values
+bac.phylo.bin.melt<-subset(bac.phylo.bin.melt, value != "NaN") ### remove "NaN" when it exists
+names(bac.phylo.bin.melt)[3] <- "Bin"
+names(bac.phylo.bin.melt)[4] <- "RelImportance"
+head(bac.phylo.bin.melt)
+
+### arrange values
+bac.phylo.bin.melt$Bin <- factor(bac.phylo.bin.melt$Bin, levels = c("bin1","bin2","bin3","bin4","bin5"))
+bac.phylo.bin.melt$Index <- factor(bac.phylo.bin.melt$Index, levels = rev(c("HoS","HeS","DL","HD","DR")))
+bac.phylo.bin.melt$Group <- factor(bac.phylo.bin.melt$Group, levels = group.list)
+
+#### 6-4-3. plotting ####
+ggplot(bac.phylo.bin.melt, aes(x=Bin, y = RelImportance, fill = Index)) + 
+  geom_bar(stat="identity", width = 0.8, position = 'stack') +
+  facet_wrap(~Group, nrow =2)+
+  scale_fill_manual(values = c("HoS"= "#3c93c2","HeS" = "#9ec9e2",
+                               "DL" = "#fcde9c", "HD" = "#feb24c",
+                               "DR"="#fc4e2a")) +
+  
+  xlab('')+ theme(aspect.ratio = 1) + 
+  ylab("Relative importance \n") +
+  #ggtitle("Phylum Community Composition by Sample \n") +
+  ## adjust positions
+  guides(fill = guide_legend(nrow = 5,reverse = F))+
+  theme(legend.position="right") +
+  theme(plot.title = element_text(size = 20,hjust = 0.5, face='bold')) + 
+  theme(axis.title.x = element_text(size = 15,hjust = 0.5, face='bold')) + 
+  theme(axis.title.y = element_text(size = 13,hjust = 0.5, face='bold')) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 0.5, vjust=0.4,size=12, face='bold',color='black'))+
+  theme(axis.text.y = element_text(size=15, face='bold',color='black'))+
+  scale_y_continuous(breaks=seq(0,1,0.2))+
+  theme(panel.grid.major = element_blank()) +
+  theme(panel.grid.minor = element_blank(), panel.background=element_blank(),panel.border=element_blank(), plot.background=element_blank())                           
