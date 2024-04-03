@@ -30,3 +30,27 @@ Before attending the workshop, please have the following ready.
   3-2. for the Session 3
        install.packages(c("iCAMP","reshape2","dplyr","ape"))
 
+
+##### Caveats when installing R and R packages
+1. Before installing R and R Studio, you should make sure below.
+ - Check if your device name is in English.
+ - Check if the user name is also in English.
+ - Check if the directory path and folder names where R and R studio will be installed are in English.
+   (Example path: C:\Program Files\R, works fine; C:\Users\GildongHong\Desktop\R, works fine; 
+                  C:\Users\홍길동\Desktop\R, an error occurred; C:\Users\GildongHong\Desktop\R스튜디오, an error occurred)
+
+2. While you install R packages using the above codes, you might see the message below.
+
+"Update all/some/none? [a/s/n]:"
+
+When you get this message, type n and press the enter key to skip the update of the listed R packages.
+(The package update could cause the malfunction of other R packages because of the loss of the dependency.)
+
+
+
+
+
+
+
+
+
