@@ -18,7 +18,14 @@ Before attending the workshop, please have the following ready.
        if (!requireNamespace("devtools", quietly = TRUE)){install.packages("devtools")}
        devtools::install_github("jbisanz/qiime2R")
 
-       install.packages(c("phyloseq","ggplot2","vegan"))
+       install.packages(c("ggplot2","vegan"))
+
+       ##### Installation of the R package phyloseq
+       if (!require("BiocManager", quietly = TRUE))
+           install.packages("BiocManager")
+
+       BiocManager::install("phyloseq")
+
 
   3-2. for the Session 3
        install.packages(c("iCAMP","reshape2","dplyr","ape"))
