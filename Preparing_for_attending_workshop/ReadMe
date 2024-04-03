@@ -37,7 +37,8 @@ Before attending the workshop, please have the following ready.
  - Check if the user name is also in English.
  - Check if the directory path and folder names where R and R studio will be installed are in English.
    (Example path: C:\Program Files\R, works fine; C:\Users\GildongHong\Desktop\R, works fine; 
-                  C:\Users\홍길동\Desktop\R, an error occurred; C:\Users\GildongHong\Desktop\R스튜디오, an error occurred)
+                  C:\Users\홍길동\Desktop\R, an error occurred because of the username; 
+                  C:\Users\GildongHong\Desktop\R스튜디오, an error occurred because of the folder name)
 
 2. While you install R packages using the above codes, you might see the message below.
 
