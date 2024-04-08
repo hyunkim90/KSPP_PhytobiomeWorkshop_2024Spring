@@ -17,6 +17,12 @@ names(trait_data) <- tree$tip.label
 K_continuous <- phytools::phylosig(tree, trait_data, method="K")
 print(K_continuous)
 
+#### 3-2. When considering mean abundances of ASVs as a continuous trait ####
+trait_data<-apply(comm,2,mean) ### The variable comm is the ASV or OTU abundance table data.
+names(trait_data) <- tree$tip.label
+K_continuous <- phytools::phylosig(tree, trait_data, method="K")
+print(K_continuous)
+
 #### 4. Test phylogenetic signal (Blomberg's K) for each bin size ####
 # If you want to see how different bin sizes (number of bins) affect the results,
 # you could loop through different numbers of bins and calculate Blomberg's K for each
