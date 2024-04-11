@@ -1,6 +1,11 @@
 Script and output data addressed in the last session
 
-Description of files and folders
+### Description of files and folders
 1. Script.R: The R script for the iCAMP analyses
 2. Appendix_script_Testing phylogenetic signals for the iCAMP analysis.R: The auxiliary R script for testing phylogenetic signals
 3. Output: The output files of the analyses
+
+### Papers for studying the concept of community assembly and ecological models
+1. (Review) Zhou and Ning. 2017. Microbiology and Molecular Biology Reviews (https://doi.org/10.1128/mmbr.00002-17)
+2. (Research article) Ning et al. 2020. Nature Communications (https://doi.org/10.1038/s41467-020-18560-z)
+3. (Research article) Stegen et al. 2023. ISME Journal (https://doi.org/10.1038/ismej.2013.93)
