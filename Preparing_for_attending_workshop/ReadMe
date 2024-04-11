@@ -27,6 +27,12 @@ Before attending the workshop, please have the following ready.
      - Session 3
        install.packages(c("iCAMP","reshape2","dplyr","ape"))
 
+       # Please check if the packages are installed correctly by loading the packages in the R Studio.
+       library(iCAMP)
+       library(reshape2)
+       library(dplyr)
+       library(ape)
+
 ##### Caveats when installing R and R packages #####
 1. Before installing R and R Studio, you should make sure below.
  - Check if your device name is in English.
