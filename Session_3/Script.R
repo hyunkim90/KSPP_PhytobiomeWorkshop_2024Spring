@@ -15,7 +15,7 @@ library(ggplot2)
 library(dplyr)
 
 ### 1-2. prepare data ####
-load(file="C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_2/phyloseq_object.RData")
+load(file="C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_2/phyloseq_object.RData") ## Please replace the path with a path where the data is located.
 phyloseq_object
 
 #### 1-2-1. abundance table ####
