@@ -31,7 +31,7 @@ tree <- phyloseq::phy_tree(phyloseq_object)
 
 ### (Optional) load data from saved tables #### 
 ### The code described below can be used when the above tables are saved in a certain folder.
-load.wd <- "C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Input"
+load.wd <- "C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Input" ### This is the example path.
 setwd(load.wd)
 comm <- t(read.table("asv_abundance_table.txt", header = TRUE, sep = "\t", row.names = 1,
                   as.is = TRUE, stringsAsFactors = FALSE, comment.char = "",
