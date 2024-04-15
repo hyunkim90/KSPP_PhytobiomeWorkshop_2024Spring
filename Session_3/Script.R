@@ -138,6 +138,35 @@ write.table(data.frame(ds=ds,n.min=bin.size.limit,binID=rownames(binps$detail),b
 # and relative high meanR (mean correlation coefficient across bins).
 # see help document of the function "ps.bin" for the meaning of output.
 
+#### 4-1-2-3. (Loop) test within-bin phylogenetic signal #### The test can be conducted using the for-loop structure.
+for (i in 5:48){
+  ##### Try phylogenetic binning using current setttings ####
+  ds = 0.2 # setting can be changed to explore the best choice
+  bin.size.limit =i # The value i is automatically imported by the for-loop structure.
+  phylobin=taxa.binphy.big(tree = tree, pd.desc = pd.big$pd.file,pd.spname = pd.big$tip.label,
+                           pd.wd = pd.big$pd.wd, ds = ds, bin.size.limit = bin.size.limit,
+                           nworker = nworker)
+  ##### Test within-bin phylogenetic signal ####
+  sp.bin=phylobin$sp.bin[,3,drop=FALSE]
+  sp.ra=colMeans(comm/rowSums(comm))
+  abcut=10 # you may remove some species, if they are too rare to perform reliable correlation test.
+  commc=comm[,colSums(comm)>=abcut,drop=FALSE]
+  dim(commc)
+  dim(comm)
+  spname.use=colnames(commc)
+  binps=iCAMP::ps.bin(sp.bin = sp.bin,sp.ra = sp.ra,spname.use = spname.use,
+                      pd.desc = pd.big$pd.file, pd.spname = pd.big$tip.label, pd.wd = pd.big$pd.wd,
+                      nd.list = niche.dif$nd,nd.spname = niche.dif$names,ndbig.wd = niche.dif$nd.wd,
+                      cor.method = "pearson",r.cut = 0.1, p.cut = 0.05, min.spn = 5)
+  
+  if(file.exists(paste0(prefix,".BinSize",i,".PhyloSignalSummary.csv"))){appendy=TRUE;col.namesy=FALSE}else{appendy=FALSE;col.namesy=TRUE}
+  write.table(data.frame(ds=ds,n.min=bin.size.limit,binps$Index),file = paste0(prefix,".BinSize",i,".PhyloSignalSummary.csv"),
+              append = appendy, quote=FALSE, sep=",", row.names = FALSE,col.names = col.namesy)
+  if(file.exists(paste0(prefix,".BinSize",i,".PhyloSignalDetail.csv"))){appendy2=TRUE;col.namesy2=FALSE}else{appendy2=FALSE;col.namesy2=TRUE}
+  write.table(data.frame(ds=ds,n.min=bin.size.limit,binID=rownames(binps$detail),binps$detail),file = paste0(prefix,".BinSize",i,".PhyloSignalDetail.csv"),
+              append = appendy2, quote = FALSE, sep = ",", row.names = FALSE, col.names = col.namesy2)
+}
+
 #### 4-1-3. iCAMP analysis ####
 bin.size.limit = 5 # use a proper number according to phylogenetic signal test
 sig.index="Confidence" ### commonly use # set sig.index as Confidence instead of SES.RC (betaNRI/NTI + RCbray)
@@ -153,7 +182,7 @@ icres=iCAMP::icamp.big(comm=comm, pd.desc = pd.big$pd.file, pd.spname=pd.big$tip
                        ses.cut = 1.96, rc.cut = 0.95, conf.cut=0.975, omit.option = "no",meta.ab = NULL)
 
 ### 4-2. The analysis if an env file is not available ####
-bin.size.limit = 5 # According to the authors, optimum value is 12, 24 (default), or 48.
+bin.size.limit = 5 # According to the authors, the optimum value is 12, 24 (default), or 48.
 sig.index="Confidence" ## # commonly use # set sig.index as Confidence instead of SES.RC (betaNRI/NTI + RCbray)
 # see other options in help document of icamp.big.
 icres=iCAMP::icamp.big(comm=comm, pd.desc = pd.big$pd.file, pd.spname=pd.big$tip.label,
