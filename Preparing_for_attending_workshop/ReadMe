@@ -2,6 +2,8 @@ Before attending the workshop, please have the following ready.
 
 1. Please bring a laptop for the hands-on analyses.
    Please make sure that the available hard disk space is at least 50 GB since it is required for the iCAMP analysis.
+   Please check how many cores are available for your laptop.
+   for Windows users, press Ctrl+Shift+ESC to open the task manager (작업관리자) and go to the Performance (성능) tab. Then, you can check the number of cores on your desktop or laptop.
 
 2. Install required software
    2-1. R and R studio by referring to the links below
