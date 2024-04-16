@@ -193,7 +193,7 @@ icres=iCAMP::icamp.big(comm=comm, pd.desc = pd.big$pd.file, pd.spname=pd.big$tip
                        ses.cut = 1.96, rc.cut = 0.95, conf.cut=0.975, omit.option = "no",meta.ab = NULL)
 
 ### 4-2. The analysis if an env file is not available ####
-bin.size.limit = 5 # According to the authors, the optimum value is 12, 24 (default), or 48.
+bin.size.limit = 5 # Minimum numbers of OTUs or ASVs in a bin. According to the authors, the optimum value is 12, 24 (default), or 48.
 sig.index="Confidence" ## # commonly use # set sig.index as Confidence instead of SES.RC (betaNRI/NTI + RCbray)
 # see other options in help document of icamp.big.
 icres=iCAMP::icamp.big(comm=comm, pd.desc = pd.big$pd.file, pd.spname=pd.big$tip.label,
