@@ -15,9 +15,10 @@ library(ggplot2)
 library(dplyr)
 
 ### 1-2. prepare data ####
-### For Windows Users
+set.seed(1234)
+### for Windows users
 load(file="C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_2/phyloseq_object.RData") ## Please replace the path with a path where the data is located.
-### For MacOS Users
+### for MacOS users
 load(file="~/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_2/phyloseq_object.RData") ## Please replace the path with a path where the data is located.
 
 phyloseq_object
@@ -28,17 +29,14 @@ comm <-t(data.frame(otu_table(phyloseq_object)))
 clas <-data.frame(tax_table(phyloseq_object))
 #### 1-2-3. sample metadata ####
 metatable <-data.frame(sample_data(phyloseq_object))
-treat <- metatable[c(3)] ### Extract categorical variables
+treat <- metatable[c(3)] ### Categorical variables
 #env <- metatable[c(1,3,4,...)] ### Continuous variables; not available in this workshop.
 #### 1-2-4. phylogenetic tree ####
 tree <- phyloseq::phy_tree(phyloseq_object)
 
 ### (Optional) load data from saved tables #### 
 ### The code described below can be used when the above tables are saved in a certain folder.
-### For Windows Users
 load.wd <- "C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Input" ### This is the example path.
-### For MacOS Users
-load.wd <- "~/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Input" ### This is the example path.
 setwd(load.wd)
 comm <- t(read.table("asv_abundance_table.txt", header = TRUE, sep = "\t", row.names = 1,
                   as.is = TRUE, stringsAsFactors = FALSE, comment.char = "",
@@ -57,8 +55,8 @@ env <- read.table("enviroment_table.txt", header = TRUE, sep = "\t", row.names =
 ### 1-3. key parameter setting #####
 prefix="Test"  # prefix of the output file names. usually use a project ID.
 rand.time=100  # randomization time, 1000 is usually enough. For example test, you may set as 100 or less to save time.
-nworker=5 # nworker is thread number for parallel computing, which depends on the CPU core number of your computer.
-memory.G=50 # to set the memory size as you need (but should be less than the available space in your hard disk), 
+nworker=2 # nworker is thread number for parallel computing, which depends on the CPU core number of your computer.
+memory.G=10 # to set the memory size as you need (but should be less than the available space in your hard disk), 
 #             so that calculation of large tree will not be limited by physical memory. unit is Gb.
 
 ## 2. check data prior to the analysis ####
@@ -82,10 +80,11 @@ tree=spid.check$tree
 
 ## 3. get pairwise phylogenetic distance matrix ####
 ### 3-1. set the directory where results will be saved ####
-### For Windows Users
-save.wd <- "C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Test" ### Please create a new folder named Test first.
-### For MacOS Users
-save.wd <- "~/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Test" ### Please create a new folder named Test first.
+### For Windows users
+save.wd <- "C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Test" ### Please create a new folder named Test.
+### For MacOS users
+save.wd <- "~/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Test" ### Please create a new folder named Test.
+
 setwd(save.wd)
 
 ### 3-2. calculate pairwise phylogenetic distance ####
@@ -108,6 +107,8 @@ if(!file.exists("pd.desc"))
   pd.big$pd.name.file="pd.taxon.name.csv"
 }
 
+pd.big
+
 ## 4. iCAMP analysis ####
 ### 4-1. The analysis if an env file is available ####
 #### 4-1-1. assess niche preference difference between ASVs #### 
@@ -120,7 +121,7 @@ niche.dif=iCAMP::dniche(env = env,comm = comm,method = "niche.value",
 #### 4-1-2. within-bin phylogenetic signal assessment ####
 #### you may try several different settings of binning, and choose the one leading to the best within-bin phylogenetic signal.
 #### env is required for this step.
-##### 4-1-2-1. try phylogenetic binning using current setttings ####
+##### 4-1-2-1. try phylogenetic binning using current settings ####
 ds = 0.2 # setting can be changed to explore the best choice
 bin.size.limit = 5 # setting can be changed to explore the best choice. # here set as 5 just for the small example dataset. For real data, usually try 12 to 48.
 phylobin=taxa.binphy.big(tree = tree, pd.desc = pd.big$pd.file,pd.spname = pd.big$tip.label,
@@ -211,7 +212,7 @@ icres=iCAMP::icamp.big(comm=comm, pd.desc = pd.big$pd.file, pd.spname=pd.big$tip
 # The second element "detail" including binning information (named taxabin), phylogenetic and taxonomic metrics results in each bin (named like bNRIi, RCa, etc.), 
 # relative abundance of each bin (bin.weight), relative importance of each process in each turnover between communities (processes), input settings (setting), and input community data matrix (comm). 
 # See help document of the function icamp.big for more details.
-
+icres
 head(icres$CbMPDiCBraya)
 
 ### 4-3. community data transformation and taxonomic dissimilarity index change ####
@@ -306,15 +307,18 @@ bac.phylo.bin<-read.csv("Test.ProcessImportance_EachBin_EachGroup.csv")
 head(bac.phylo.bin)
 bac.phylo.bin <- bac.phylo.bin[-c(1,2)] # remove the first and second column
 bac.phylo.bin <- subset(bac.phylo.bin, !(rownames(bac.phylo.bin) %in% rownames(bac.phylo.bin[grep("DominantProcess",bac.phylo.bin$Index),]))) # remove rows containing the value DominantProcess in the column Index
+head(bac.phylo.bin)
 
 ### change the class to numeric if the class of relative importance values is character
+class(bac.phylo.bin$bin1)
 i<-c(3:ncol(bac.phylo.bin))
 bac.phylo.bin[, i] <- apply(bac.phylo.bin[ , i], 2,function(x) as.numeric(as.character(x)))
+class(bac.phylo.bin$bin1)
 head(bac.phylo.bin)
+
 #### 6-2-2. format the data to fit to ggplot2 ####
 bac.phylo.bin.melt <- reshape2::melt(bac.phylo.bin)
-subset(bac.phylo.bin.melt, value == "NaN") ### check if there is "NaN" among values
-bac.phylo.bin.melt<-subset(bac.phylo.bin.melt, value != "NaN") ### remove "NaN" when it exists
+head(bac.phylo.bin.melt)
 bac.phylo.bin.melt.mean <- bac.phylo.bin.melt %>% group_by(Index, variable) %>% summarise(MeanRelImportance = mean(value))
 names(bac.phylo.bin.melt.mean)[2] <- "Bin"
 head(bac.phylo.bin.melt.mean)
