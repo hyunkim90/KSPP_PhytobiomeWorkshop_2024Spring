@@ -15,7 +15,11 @@ library(ggplot2)
 library(dplyr)
 
 ### 1-2. prepare data ####
+### For Windows Users
 load(file="C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_2/phyloseq_object.RData") ## Please replace the path with a path where the data is located.
+### For MacOS Users
+load(file="~/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_2/phyloseq_object.RData") ## Please replace the path with a path where the data is located.
+
 phyloseq_object
 
 #### 1-2-1. abundance table ####
@@ -24,14 +28,17 @@ comm <-t(data.frame(otu_table(phyloseq_object)))
 clas <-data.frame(tax_table(phyloseq_object))
 #### 1-2-3. sample metadata ####
 metatable <-data.frame(sample_data(phyloseq_object))
-treat <- metatable[c(2)] ### Categorical variables
+treat <- metatable[c(3)] ### Extract categorical variables
 #env <- metatable[c(1,3,4,...)] ### Continuous variables; not available in this workshop.
 #### 1-2-4. phylogenetic tree ####
 tree <- phyloseq::phy_tree(phyloseq_object)
 
 ### (Optional) load data from saved tables #### 
 ### The code described below can be used when the above tables are saved in a certain folder.
+### For Windows Users
 load.wd <- "C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Input" ### This is the example path.
+### For MacOS Users
+load.wd <- "~/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Input" ### This is the example path.
 setwd(load.wd)
 comm <- t(read.table("asv_abundance_table.txt", header = TRUE, sep = "\t", row.names = 1,
                   as.is = TRUE, stringsAsFactors = FALSE, comment.char = "",
