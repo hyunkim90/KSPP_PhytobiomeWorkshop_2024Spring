@@ -1,0 +1,5 @@
+new("big.matrix.descriptor", description = list(sharedType = "FileBacked", 
+    filename = "pd.bin", dirname = "/Users/hyunkim/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Test/", 
+    totalRows = 44L, totalCols = 44L, rowOffset = c(0, 44), colOffset = c(0, 
+    44), nrow = 44, ncol = 44, rowNames = NULL, colNames = NULL, 
+    type = "double", separated = FALSE))
