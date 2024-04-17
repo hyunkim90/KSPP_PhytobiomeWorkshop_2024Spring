@@ -81,9 +81,13 @@ tree=spid.check$tree
 ## 3. get pairwise phylogenetic distance matrix ####
 ### 3-1. set the directory where results will be saved ####
 ### For Windows users
-save.wd <- "C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Test" ### Please create a new folder named Test.
+### Create a new folder named Test.
+dir.create("C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Test") 
+save.wd <- "C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Test" 
 ### For MacOS users
-save.wd <- "~/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Test" ### Please create a new folder named Test.
+### Create a new folder named Test.
+dir.create("~/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Test")
+save.wd <- "~/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_3/Test"
 
 setwd(save.wd)
 
