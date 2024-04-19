@@ -1,6 +1,6 @@
 ######## 2024_Spring_KSPP workshop part.2
 ### 0. Install and load packages and set the working directory
-packages <- c("phyloseq", "vegan", "ggplot2", "lawstat", "FSA", "rcompanion", "dplyr", "remotes")
+packages <- c("phyloseq", "vegan", "ggplot2", "lawstat", "FSA", "rcompanion", "dplyr", "reshape2", "remotes")
 install_packages <- packages[!sapply(packages, requireNamespace, quietly = TRUE)]
 if (length(install_packages) > 0) {
   install.packages(install_packages)
