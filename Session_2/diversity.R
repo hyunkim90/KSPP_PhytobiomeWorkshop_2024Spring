@@ -5,6 +5,10 @@ install_packages <- packages[!sapply(packages, requireNamespace, quietly = TRUE)
 if (length(install_packages) > 0) {
   install.packages(install_packages)
 }
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install("genefilter")
+remotes::install_github("twbattaglia/btools")
 
 library(phyloseq)
 library(vegan)
@@ -16,6 +20,7 @@ library(dplyr)
 
 # Set the working directory
 setwd("C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_1")
+############### WIN -> your username
 getwd()
 
 #### 1. Data preparation
@@ -116,11 +121,13 @@ ggplot(data = alpha, aes(x=Branch_number, y=Observed, fill=Branch_number)) +
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank()) +
-  theme(legend.position = "none") + geom_text(data=cld, aes(label=Letter, x=Branch_number, y=31))
+  theme(legend.position = "none") +
+  theme(aspect.ratio=1) +
+  geom_text(data=cld, aes(label=Letter, x=Branch_number, y=31))
 
 ## 2-6. Shannon diversity
 shapiro.test(alpha$Shannon) # normality test
-kruskal.test(Shannon~Branch_number, data=alpha) # Kruskal Wallis Test (nonparametric test)
+kruskal.test(Shannon~Branch_number, data=alpha) # Kruskal Wallis Test
 DT <- dunnTest(Shannon~Branch_number, data=alpha)
 PT <- DT$res
 cld <- cldList(P.adj ~ Comparison,data = PT, threshold = 0.05)
@@ -144,11 +151,12 @@ ggplot(data = alpha, aes(x=Branch_number, y=Shannon, fill=Branch_number)) +
         panel.grid.minor = element_blank(),
         panel.background = element_blank()) +
   theme(legend.position = "none") +
+  theme(aspect.ratio = 1) +
   geom_text(data=cld, aes(label=Letter, x=Branch_number, y=2.5))
 
 ## 2-7. Simpson
 shapiro.test(alpha$Simpson) # normality test
-kruskal.test(Simpson~Branch_number, data=alpha) # Kruskal Wallis Test (nonparametric test)
+kruskal.test(Simpson~Branch_number, data=alpha) # Kruskal Wallis Test
 DT <- dunnTest(Simpson~Branch_number, data=alpha)
 PT <- DT$res
 cld <- cldList(P.adj ~ Comparison,data = PT, threshold = 0.05)
@@ -172,6 +180,7 @@ ggplot(data = alpha, aes(x=Branch_number, y=Simpson, fill=Branch_number)) +
         panel.grid.minor = element_blank(),
         panel.background = element_blank()) +
   theme(legend.position = "none") +
+  theme(aspect.ratio = 1) +
   geom_text(data=cld, aes(label=Letter, x=Branch_number, y=1.0))
 
 ## 2-8. all index plotting
@@ -193,7 +202,7 @@ ggplot(data = alpha.melt.wanted, aes(x=Branch_number, y=Value, fill=Branch_numbe
   xlab("\n Branch") + ylab("Alpha diversity \n") +
   theme(axis.title.x = element_text(size = 15, hjust = 0.5, face='bold')) + 
   theme(axis.title.y = element_text(size = 15, hjust = 0.5, face='bold')) + 
-  theme(axis.text.x = element_text(size=12, angle = 0, hjust = 0.5, vjust=0.5, face='bold',color='black'))+
+  theme(axis.text.x = element_text(size=10, angle = 0, hjust = 0.5, vjust=0.5, face='bold',color='black'))+
   theme(axis.text.y = element_text(size = 15, face='bold',color='black'))+
   theme(axis.line = element_line(colour = "black"),
         panel.grid.major = element_blank(),
