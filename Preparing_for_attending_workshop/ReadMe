@@ -15,7 +15,7 @@ Before attending the workshop, please have the following ready.
        if (!require("BiocManager", quietly = TRUE))
        install.packages("BiocManager")
        BiocManager::install("genefilter")
-       packages <- c("phyloseq", "vegan", "ggplot2", "lawstat", "FSA", "rcompanion", "remotes")
+       packages <- c("phyloseq", "vegan", "ggplot2", "lawstat", "FSA", "rcompanion", "remotes", "RColorBrewer")
        install_packages <- packages[!sapply(packages, requireNamespace, quietly = TRUE)]
        if (length(install_packages) > 0) {
        install.packages(install_packages)
