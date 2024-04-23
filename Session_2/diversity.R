@@ -1,10 +1,12 @@
 ######## 2024_Spring_KSPP workshop part.2
 ### 0. Install and load packages and set the working directory
-packages <- c("phyloseq", "vegan", "ggplot2", "lawstat", "FSA", "rcompanion", "dplyr", "reshape2", "remotes")
+packages <- c("phyloseq", "vegan", "ggplot2", "lawstat", "FSA", "rcompanion", "dplyr", "reshape2", "remotes", "RColorBrewer")
 install_packages <- packages[!sapply(packages, requireNamespace, quietly = TRUE)]
 if (length(install_packages) > 0) {
   install.packages(install_packages)
 }
+
+# for phylogenetic diversity
 if (!require("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 BiocManager::install("genefilter")
@@ -17,15 +19,16 @@ library(lawstat)
 library(FSA)
 library(rcompanion)
 library(dplyr)
+library(btools)
+library(RColorBrewer)
 
 # Set the working directory
 setwd("C:/Users/WIN/Desktop/KSPP_PhytobiomeWorkshop_2024Spring-main/Session_1")
-############### WIN -> your username
 getwd()
 
 #### 1. Data preparation
 ## 1-1. Import biom, metadata, tree file
-a <- import_biom("./Output/4_Filter-sequence-table/otu_table_final.biom")
+a <- import_biom("./Output/4_Filter-sequence-table/otu_table_final_json.biom")
 b <- import_qiime_sample_data("./Input/sample_metadata.tsv")
 c <- read_tree("./Output/6_Build-Phylogeny/tree.nwk")
 
@@ -77,7 +80,8 @@ plot_richness(rare.run, x="Branch_number", color="Branch_number", measures=c("Ob
   theme(strip.background=element_rect(fill="lightgrey")) +
   theme(strip.text = element_text(size=12)) +
   labs(x="\n Branch", y="Alpha diversity \n") +
-  scale_color_manual(values=c("Branch_2"="#FF5765", "Branch_3"="#01DEE6", "Branch_4"="#8A6FDF", "Branch_5"="#7CB53A"))
+  scale_color_manual(values=c("Branch_2"="#FF5765", "Branch_3"="#01DEE6",
+                              "Branch_4"="#8A6FDF", "Branch_5"="#7CB53A"))
 
 ## 2-3. Calculate alpha diversity
 alpha <- estimate_richness(
@@ -106,7 +110,7 @@ names(cld) <- c("Branch_number", "Letter", "MonoLetter")
 cld
 
 # plotting
-ggplot(data = alpha, aes(x=Branch_number, y=Observed, fill=Branch_number)) +
+observed <- ggplot(data = alpha, aes(x=Branch_number, y=Observed, fill=Branch_number)) +
   geom_boxplot(lwd=0.8, width = 0.8, outlier.shape = 16) +
   theme_bw() + 
   scale_fill_manual(values=c("Branch_2"="#FF5765", "Branch_3"="#01DEE6",
@@ -117,13 +121,15 @@ ggplot(data = alpha, aes(x=Branch_number, y=Observed, fill=Branch_number)) +
   theme(axis.title.y = element_text(size = 15, hjust = 0.5, face='bold')) + 
   theme(axis.text.x = element_text(size=12, angle = 0, hjust = 0.5, vjust=0.5, face='bold',color='black'))+
   theme(axis.text.y = element_text(size = 15, face='bold',color='black'))+
-  theme(axis.line = element_line(colour = "black"),
-        panel.grid.major = element_blank(),
+  theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank()) +
-  theme(legend.position = "none") +
-  theme(aspect.ratio=1) +
+  theme(legend.position = "none") + 
+  theme(aspect.ratio = 1) +
   geom_text(data=cld, aes(label=Letter, x=Branch_number, y=31))
+
+observed
+# ggsave("observed.jpg", observed, width=8, height=8)
 
 ## 2-6. Shannon diversity
 shapiro.test(alpha$Shannon) # normality test
@@ -146,8 +152,7 @@ ggplot(data = alpha, aes(x=Branch_number, y=Shannon, fill=Branch_number)) +
   theme(axis.title.y = element_text(size = 15,hjust = 0.5, face='bold')) + 
   theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.4,size=12, face='bold',color='black'))+
   theme(axis.text.y = element_text(size=15, face='bold',color='black'))+
-  theme(axis.line = element_line(colour = "black"),
-        panel.grid.major = element_blank(),
+  theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank()) +
   theme(legend.position = "none") +
@@ -175,8 +180,7 @@ ggplot(data = alpha, aes(x=Branch_number, y=Simpson, fill=Branch_number)) +
   theme(axis.title.y = element_text(size = 15,hjust = 0.5, face='bold')) + 
   theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.4,size=12, face='bold',color='black'))+
   theme(axis.text.y = element_text(size=15, face='bold',color='black'))+
-  theme(axis.line = element_line(colour = "black"),
-        panel.grid.major = element_blank(),
+  theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank()) +
   theme(legend.position = "none") +
@@ -198,26 +202,22 @@ ggplot(data = alpha.melt.wanted, aes(x=Branch_number, y=Value, fill=Branch_numbe
   theme_bw() + 
   scale_fill_manual(values=c("Branch_2"="#FF5765", "Branch_3"="#01DEE6",
                              "Branch_4"="#8A6FDF", "Branch_5"="#7CB53A")) +
-  #geom_point(position='jitter',shape=1, alpha=0.8, colour="black", size=1.5) + 
+  #geom_point(position='jitter',shape=1, alpha=0.8, colour="black", size=1.5) +
   xlab("\n Branch") + ylab("Alpha diversity \n") +
   theme(axis.title.x = element_text(size = 15, hjust = 0.5, face='bold')) + 
   theme(axis.title.y = element_text(size = 15, hjust = 0.5, face='bold')) + 
   theme(axis.text.x = element_text(size=10, angle = 0, hjust = 0.5, vjust=0.5, face='bold',color='black'))+
   theme(axis.text.y = element_text(size = 15, face='bold',color='black'))+
-  theme(axis.line = element_line(colour = "black"),
-        panel.grid.major = element_blank(),
+  theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank()) +
   theme(legend.position = "none") +
   theme(aspect.ratio = 1) +
   theme(panel.spacing=unit(1, "cm"))
 
+# ggsave("multiple_index.jpg", multiple_index, width=8, height=8)
 
 ## 2-10. phylogenetic diversity
-install.packages("genefilter")
-remotes::install_github("twbattaglia/btools")
-library(btools)
-
 pd <- estimate_pd(rare.run)
 head(pd)
 pd$SampleID <- row.names(pd)
@@ -226,7 +226,7 @@ rownames(pd) <- NULL
 head(pd)
 
 shapiro.test(pd$PD) # normality test
-kruskal.test(PD~Branch_number, data=pd) # Kruskal Wallis Test (nonparametric test)
+kruskal.test(PD~Branch_number, data=pd) # Kruskal Wallis Test
 DT <- dunnTest(PD~Branch_number, data=pd)
 PT <- DT$res
 cld <- cldList(P.adj ~ Comparison,data = PT, threshold = 0.05)
@@ -245,8 +245,7 @@ ggplot(data = pd, aes(x=Branch_number, y=PD, fill=Branch_number)) +
   theme(axis.title.y = element_text(size = 15,hjust = 0.5, face='bold')) + 
   theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust=0.4,size=12, face='bold',color='black'))+
   theme(axis.text.y = element_text(size=15, face='bold',color='black'))+
-  theme(axis.line = element_line(colour = "black"),
-        panel.grid.major = element_blank(),
+  theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank()) +
   theme(legend.position = "none") +
@@ -254,10 +253,6 @@ ggplot(data = pd, aes(x=Branch_number, y=PD, fill=Branch_number)) +
 
 #### 3. Relative abundance - bar plot
 ## 3-1. make a dataframe for relative abundance calculation
-# check a sample data
-sample_data(run)
-#Branch_2, Branch_3, Branch_4, Branch_5
-
 # transform sample count and modifying the dataframe
 run.normalized <- transform_sample_counts(run, function(x) 100*x/sum(x)) # transform read counts so that total for each sample is 100.
 run.normalized.phylum <- tax_glom(run.normalized, "Phylum", NArm=FALSE) %>% psmelt() # extract only Phylum taxa and phyloseq data melting
@@ -269,9 +264,7 @@ head(run.normalized.phylum)
 unique(run.normalized.phylum$Phylum)
 
 ## 3-2. plot each sample
-library(RColorBrewer)
 my.colors <- brewer.pal(6, "Accent") # set color
-
 ggplot(run.normalized.phylum, aes(x=SampleID, y=Abundance, fill=Phylum)) +
   geom_bar(stat="identity", width=0.8, position="stack") +
   facet_wrap(~Branch_number, scales="free_x", ncol=2) +
@@ -291,7 +284,7 @@ ggplot(run.normalized.phylum, aes(x=SampleID, y=Abundance, fill=Phylum)) +
 
 ## 3-3. transform the counts to mean value by Phylum and each group
 run.normalized.phylum.mean <- run.normalized.phylum %>%
-  group_by(Branch_number, Phylum) %>%
+  group_by(Branch_number, OTU, Phylum) %>%
   summarize(Rel_abundance = mean(Abundance))
 head(run.normalized.phylum.mean)
 sum(run.normalized.phylum.mean$Rel_abundance)
@@ -299,7 +292,6 @@ sum(run.normalized.phylum.mean$Rel_abundance)
 
 # set sample order and phylum order
 order.sample <- c("Branch_2", "Branch_3", "Branch_4", "Branch_5")
-
 ord <- run.normalized.phylum.mean %>% group_by(Phylum) %>% summarise(Rel_abundance=sum(Rel_abundance)) %>% arrange(-Rel_abundance)
 vec <- ord$Phylum
 vec.charac <- as.character(vec)
